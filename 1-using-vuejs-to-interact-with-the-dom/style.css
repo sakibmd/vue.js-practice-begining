@@ -1,0 +1,17 @@
+.demo{
+    height: 250px;
+    width: 250px;
+    background-color: gray;
+}
+
+.red{
+    background-color: red;
+}
+
+.blue{
+    background-color: royalblue;
+}
+
+.green{
+    background-color: greenyellow;
+}

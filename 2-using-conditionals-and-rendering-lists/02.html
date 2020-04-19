@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <title>Chapter 2</title>
+</head>
+<body>
+
+    <div id="app">
+        
+
+        <ul>
+            <li v-for="(ingredient, index) in ingredients">
+                {{ ingredient }} - ({{ index
+                 }})
+            </li>
+        </ul>
+
+
+        <hr>
+            <ul v-for="person in persons">
+                <div v-for="(value, key, index) in person">
+                    {{ key }}: {{ value }} ({{ index }})
+                </div>
+            </ul>
+        <hr>
+
+        <span v-for="n in 10">{{ n }}</span>
+
+    </div>
+
+
+
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+               ingredients: ['meat', 'cookies', 'potato'],
+               persons: [
+                    {name: 'Max', age:27, color: 'red'},
+                    {name: 'Sakib', age:24, color: 'blue'},
+                ],
+            },
+
+            
+        });
+    </script>
+    
+</body>
+</html>
