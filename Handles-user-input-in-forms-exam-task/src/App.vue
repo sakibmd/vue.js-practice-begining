@@ -27,20 +27,6 @@
                         <full-name v-model="fullName" ></full-name>    
                         
                         
-
-
-
-
-                      
-                        
-                        
-                        
-                        
-                       
-                        
-
-
-
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
