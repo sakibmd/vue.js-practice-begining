@@ -5,6 +5,51 @@
     <script src="https://npmcdn.com/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="css/foundation.min.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+    <style>
+        
+        .slide-enter{
+            /* transform: translateY(20px) ; */
+            opacity: 0;
+        }
+        .slide-enter-active{
+            animation: slide-in 2s ease-out forwards;
+            transition: opacity 1s;
+        }
+        .slide-leave{
+        }
+        .slide-leave-active{
+            animation: slide-out 2s ease-out forwards;
+            transition: opacity 1s;
+            opacity: 0;
+            position: absolute;
+        }
+        .slide-move{
+            transition: transform 2s;
+        }
+
+        @keyframes slide-out {
+            from{
+                transform: rotateY(0deg); 
+            }
+            to{
+                transform: rotateY(180deg); 
+            }
+        }
+
+        @keyframes slide-in {
+            from{
+                transform: rotateY(180deg); 
+            }
+            to{
+                transform: rotateY(0deg); 
+            }
+        }
+
+        
+    </style>
+
 </head>
 <body>
 <div id="app">
@@ -45,18 +90,25 @@
     </section>
     <section class="row log" v-if="turns.length > 0">
         <div class="small-12 columns">
-            <ul>
-                <li v-for="turn in turns"
-                    :class="{'player-turn': turn.isPlayer, 'monster-turn': !turn.isPlayer}">
+
+            <ul >
+                <transition-group name="slide" appear  >
+                <li v-for="turn in turns" 
+                    :class="{'player-turn': turn.isPlayer, 'monster-turn': !turn.isPlayer}"
+                    :key="turn"
+                    >
                     {{ turn.text }}
                 </li>
+                </transition-group>
             </ul>
         </div>
     </section>
 
 
-    <script src="app.js
-    "></script>
+    <script src="app.js">
+
+
+</script>
 </div>
 </body>
 </html>
