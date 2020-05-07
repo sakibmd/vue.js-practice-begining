@@ -6,7 +6,7 @@
                 <!-- <app-header></app-header> -->
                 <router-view name="header-top"></router-view>
                
-                <transition name="slide" mode="out-in">
+                <transition name="slide" mode="out-in" appear>
                     <router-view></router-view>
                 </transition>
                 <router-view name="header-bottom"></router-view>
