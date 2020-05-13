@@ -38,7 +38,7 @@ export const routes = [
     }},
     {path: '/user', components:{
         default: User,
-        'header-top': Header,
+        'header-bottom': Header,
     }, children: [
         {path: '', component: UserStart },
         {path: ':id', component: UserDetail, beforeEnter: (to, from, next) => {
