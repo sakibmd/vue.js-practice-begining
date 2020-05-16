@@ -14,8 +14,8 @@
                 </div>
                 <div class="pull-right">
                     <button class="btn btn-success"
-                     :disabled="+insufficientQuantity || +quantity <= 0 || !Number.isInteger(+quantity)"
-                      @click="sellStock">{{ insufficientQuantity ? 'Not Enough' : 'Sell' }}</button>
+                     :disabled="insufficientQuantity || +quantity <= 0 || !Number.isInteger(+quantity)"
+                      @click="sellStock">{{ +insufficientQuantity ? 'Not Enough' : 'Sell' }}</button>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@ export default {
     computed: {
         insufficientQuantity(){
             return this.quantity > this.stock.quantity;
-        }
+        },
     },
     methods: {
         ...mapActions({
@@ -51,8 +51,8 @@ export default {
         sellStock(){
             const order = {
                 stockId: this.stock.id,
-                stockPrice: this.stock.price,
-                quantity: this.quantity
+                quantity: this.quantity,
+                stockPrice: this.stock.price
             };
             this.placeSellOrder(order);
             this.quantity = 0;

@@ -16,7 +16,7 @@
                 <div class="pull-right">
                     <button
                      class="btn btn-success"
-                      :disabled="+inSufficientFunds  || +quantity <= 0 || !Number.isInteger(+quantity)"
+                      :disabled="inSufficientFunds || +quantity <= 0 || !Number.isInteger(+quantity)"
                        @click="buyStock">{{ inSufficientFunds ? 'Insufficient Fund' : 'Buy' }}</button>
                 </div>
             </div>
@@ -51,8 +51,8 @@ export default {
         buyStock(){
             const order = {
                 stockId: this.stock.id,
-                stockPrice: this.stock.price,
-                quantity: this.quantity
+                quantity: this.quantity,
+                stockPrice: this.stock.price
             };
             this.$store.dispatch('buyStock', order);
             this.quantity = 0;
