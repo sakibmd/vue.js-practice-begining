@@ -16,4 +16,4 @@ export default {
         appStock: Stock,
     },
 }
-</script>>
+</script>
