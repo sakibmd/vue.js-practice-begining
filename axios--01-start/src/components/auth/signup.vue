@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import axios from '../../axios-auth.js';
 export default {
   data() {
     return {
@@ -60,7 +59,7 @@ export default {
       password: "",
       confirmPassword: "",
       country: "usa",
-      hobbyInputs: [{ id: 1, value: "Dancing" }],
+      hobbyInputs: [],
       terms: false
     };
   },
@@ -86,10 +85,7 @@ export default {
         terms: this.terms
       };
       console.log(formData);
-      axios
-        .post("/users.json", formData)
-        .then(res => console.log(res))
-        .catch(error => console.log(error));
+      this.$store.dispatch("signup", formData);
     }
   }
 };
