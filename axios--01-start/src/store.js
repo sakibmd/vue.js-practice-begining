@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from './axios-auth.js'
 import globalAxios from 'axios'
+import router from './router.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,9 +18,18 @@ export default new Vuex.Store({
     },
     storeUser(state, user) {
       state.user = user;
+    },
+    clearAuthData(state) {
+      state.idToken = null
+      state.userId = null
     }
   },
   actions: {
+    setLogoutTimer({  dispatch }, expirationTime) {
+      setTimeout(() => {
+        dispatch('logout');
+      }, expirationTime);
+    },
     signup({ commit, dispatch }, authData) {
       axios.post("/accounts:signUp?key=AIzaSyAR-s-JKh812ckhyif1XjHkT-VQkur_eas", {
         email: authData.email,
@@ -33,11 +43,12 @@ export default new Vuex.Store({
             userId: res.data.localId
           })
           dispatch('storeUser', authData)
+          dispatch('setLogoutTimer', res.data.expiresIn)
         })
         .catch(error => console.log(error));
     },
 
-    login({ commit }, authData) {
+    login({ commit, dispatch }, authData) {
       axios.post("/accounts:signInWithPassword?key=AIzaSyAR-s-JKh812ckhyif1XjHkT-VQkur_eas", {
         email: authData.email,
         password: authData.password,
@@ -49,8 +60,14 @@ export default new Vuex.Store({
             token: res.data.idToken,
             userId: res.data.localId
           })
+          dispatch('setLogoutTimer', res.data.expiresIn)
         })
         .catch(error => console.log(error));
+    },
+
+    logout({ commit }) {
+      commit('clearAuthData');
+      router.replace('/signin');
     },
 
     storeUser({ commit, state }, userData) {
@@ -62,7 +79,7 @@ export default new Vuex.Store({
         .then(error => console.log(error))
     },
 
-    fetchUser ({ commit }) {
+    fetchUser({ commit, state }) {
       if (!state.idToken) {
         return
       }
@@ -85,6 +102,10 @@ export default new Vuex.Store({
   getters: {
     user(state) {
       return state.user;
+    },
+
+    isAuthenticated(state) {
+      return state.idToken !== null;
     }
   }
 })
