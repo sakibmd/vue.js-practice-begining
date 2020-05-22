@@ -2,21 +2,27 @@
   <div id="signup">
     <div class="signup-form">
       <form @submit.prevent="onSubmit">
-        <div class="input">
+        <div class="input" :class="{invalid: $v.email.$error}">
           <label for="email">Mail</label>
-          <input type="email" id="email" v-model="email" />
+          <input type="email" id="email" v-model="email" @blur="$v.email.$touch()" />
+          <div>
+            <p v-if="!$v.email.email">Please enter a valid email address</p>
+            <p v-if="!$v.email.required">The field must not be empty</p>
+          </div>
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.age.$error}">
           <label for="age">Your Age</label>
-          <input type="number" id="age" v-model.number="age" />
+          <input type="number" id="age" v-model.number="age" @blur="$v.age.$touch()" />
+          <small v-if="!$v.age.minVal">You must have to be {{ $v.age.$params.minVal.min }} years old</small>
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.password.$error}">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" />
+          <input type="password" id="password" v-model="password" @blur="$v.password.$touch()" />
         </div>
-        <div class="input">
+        <div class="input" :class="{invalid: $v.confirmPassword.$error}">
           <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" />
+          <input type="password" id="confirm-password" v-model="confirmPassword" @blur="$v.confirmPassword.$touch()" />
+          
         </div>
         <div class="input">
           <label for="country">Country</label>
@@ -51,6 +57,14 @@
 </template>
 
 <script>
+import {
+  required,
+  email,
+  numeric,
+  minValue,
+  minLength,
+  sameAs
+} from "vuelidate/lib/validators";
 export default {
   data() {
     return {
@@ -62,6 +76,24 @@ export default {
       hobbyInputs: [],
       terms: false
     };
+  },
+  validations: {
+    email: {
+      required,
+      email
+    },
+    age: {
+      required,
+      numeric,
+      minVal: minValue(18) //minimum 18 hotei hobe
+    },
+    password: {
+      required,
+      minLen: minLength(6)
+    },
+    confirmPassword: {
+      sameAs: sameAs("password")
+    }
   },
   methods: {
     onAddHobby() {
@@ -135,6 +167,15 @@ export default {
 .input select {
   border: 1px solid #ccc;
   font: inherit;
+}
+
+.input.invalid label {
+  color: red;
+}
+
+.input.invalid input {
+  border: 1px solid red;
+  background-color: #ffc9aa;
 }
 
 .hobbies button {

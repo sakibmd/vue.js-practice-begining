@@ -3,6 +3,9 @@ import App from './App.vue'
 import axios from 'axios'
 import router from './router'
 import store from './store'
+import Vuelidate from 'vuelidate'
+
+Vue.use(Vuelidate);
 
 axios.defaults.baseURL = 'https://vuejs-axios-8d8b6.firebaseio.com'
 //axios.defaults.headers.common['Authorization'] = 'Sakib'
