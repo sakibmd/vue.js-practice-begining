@@ -21,8 +21,12 @@
         </div>
         <div class="input" :class="{invalid: $v.confirmPassword.$error}">
           <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" @blur="$v.confirmPassword.$touch()" />
-          
+          <input
+            type="password"
+            id="confirm-password"
+            v-model="confirmPassword"
+            @blur="$v.confirmPassword.$touch()"
+          />
         </div>
         <div class="input">
           <label for="country">Country</label>
@@ -37,19 +41,33 @@
           <h3>Add some Hobbies</h3>
           <button @click="onAddHobby" type="button">Add Hobby</button>
           <div class="hobby-list">
-            <div class="input" v-for="(hobbyInput, index) in hobbyInputs" :key="hobbyInput.id">
+            <div
+              class="input"
+              :class="{invalid: $v.hobbyInputs.$each[index].$error}"
+              v-for="(hobbyInput, index) in hobbyInputs"
+              :key="hobbyInput.id"
+            >
               <label :for="hobbyInput.id">Hobby #{{ index }}</label>
-              <input type="text" :id="hobbyInput.id" v-model="hobbyInput.value" />
+              <input
+                type="text"
+                :id="hobbyInput.id"
+                v-model="hobbyInput.value"
+                @blur="$v.hobbyInputs.$each[index].value.$touch()"
+              />
               <button @click="onDeleteHobby(hobbyInput.id)" type="button">X</button>
             </div>
+            <p
+              v-if="!$v.hobbyInputs.minLen"
+            >Yoy have to specfy at least {{ $v.hobbyInputs.$params.minLen.min }} hobbies</p>
+            <p v-if="!$v.hobbyInputs.required">Please add hobbies</p>
           </div>
         </div>
-        <div class="input inline">
-          <input type="checkbox" id="terms" v-model="terms" />
+        <div class="input inline" :class="{invalid: $v.terms.$invalid}">
+          <input type="checkbox" id="terms" @change="$v.terms.$touch()" v-model="terms" />
           <label for="terms">Accept Terms of Use</label>
         </div>
         <div class="submit">
-          <button type="submit">Submit</button>
+          <button type="submit" :disabled="$v.$invalid">Submit</button>
         </div>
       </form>
     </div>
@@ -57,13 +75,15 @@
 </template>
 
 <script>
+import axios from "axios";
 import {
   required,
   email,
   numeric,
   minValue,
   minLength,
-  sameAs
+  sameAs,
+  requiredUnless
 } from "vuelidate/lib/validators";
 export default {
   data() {
@@ -80,7 +100,15 @@ export default {
   validations: {
     email: {
       required,
-      email
+      email,
+      unique: val => {
+        if (val === "") return true;
+        return axios
+          .get('/users.json?orderBy="email"&equalTo="' + val + '"')
+          .then(res => {
+            return Object.keys(res.data).length === 0  //jodi empty pay taile true return korbe
+          });
+      }
     },
     age: {
       required,
@@ -93,6 +121,21 @@ export default {
     },
     confirmPassword: {
       sameAs: sameAs("password")
+    },
+    terms: {
+      required: requiredUnless(vm => {
+        return vm.country === "germany";
+      })
+    },
+    hobbyInputs: {
+      required,
+      minLen: minLength(2),
+      $each: {
+        value: {
+          required,
+          minLen: minLength(5)
+        }
+      }
     }
   },
   methods: {
