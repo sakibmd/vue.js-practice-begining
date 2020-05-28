@@ -59,7 +59,7 @@ export default {
     sellStock() {
       const order = {
         stockId: this.stock.id,
-        quantity: this.quantity,
+        quantity: +this.quantity,
         stockPrice: this.stock.price
       };
       this.placeSellOrder(order);

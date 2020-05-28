@@ -106,7 +106,7 @@ export default {
         return axios
           .get('/users.json?orderBy="email"&equalTo="' + val + '"')
           .then(res => {
-            return Object.keys(res.data).length === 0  //jodi empty pay taile true return korbe
+            return Object.keys(res.data).length === 0; //jodi empty pay taile true return korbe
           });
       }
     },
