@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Shopping List Calculation </title>
+    <script src="vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container" id="app" style="margin-top: 80px">
+        <div class="row">
+            <div class="col-md-8 m-auto">
+               
+                    <form @submit.prevent="addItem">
+                        <input required v-model="newItem" v-ep-restrict.number.decimal class="form-control" placeholder="Add New Item">
+                        <br>
+                        <!--  <button type="submit"  class="btn btn-info" @click.prevent="addItem">Add New Item</button> -->
+                    </form>
+                   
+
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-8 m-auto">
+                <ul class="list-group" style="border: 2px solid grey">
+                    <li class="list-group-item" v-for="(item, index) in items" :key="index">
+                       <button class="btn btn-danger" @click="removeItem(index)">Remove</button> {{ item.name }} - <input v-model="item.price" placeholder="price"> X <input placeholder="quantity" v-model="item.quantity"> Price: {{ item.price * item.quantity }}
+                    </li>
+
+                    <li class="list-group-item" style="background: grey; color: white">
+                        Total - {{ total }}
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                newItem: '',
+                items: [
+                    { name: 'oil', price: 12.00, quantity: 2 },
+                    { name: 'wheat', price: 32.50, quantity: 3 },
+                ]
+                
+            },
+            computed: {
+                total(){
+                    var amount = 0;
+                    this.items.forEach(item => {
+                        amount += parseFloat(item.price * item.quantity);
+                    })
+                    return amount;
+                },
+            },
+            methods: {
+                addItem(){
+                    this.items.push({
+                        name: this.newItem,
+                        price: 0.0,
+                        quantity: 0,
+                    });
+                    this.newItem =  ''
+                },
+                removeItem(index){
+                    this.items.splice(index, 1);
+                }
+
+            },
+            
+        })
+    </script>
+
+
+</body>
+
+</html>
